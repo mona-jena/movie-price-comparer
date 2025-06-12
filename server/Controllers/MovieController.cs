@@ -11,9 +11,9 @@ public class MovieController(IMovieService movieService) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(ApiResponse<List<MovieComparison>>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<ApiResponse<List<MovieComparison>>>> GetMovies()
+    public async Task<ActionResult<ApiResponse<List<MovieComparison>>>> GetMoviePriceComparison()
     {
-        var result = await movieService.GetAllMatchedMoviesAsync();
+        var result = await movieService.GetMoviePriceComparisonsAsync();
         return Ok(result);
     }
 

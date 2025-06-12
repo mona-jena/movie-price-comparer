@@ -6,7 +6,7 @@ namespace server.Services;
 
 public class MovieService(IWebjetProvider webjetProvider) : IMovieService
 {
-    public async Task<ApiResponse<List<MovieComparison>>> GetAllMatchedMoviesAsync()
+    public async Task<ApiResponse<List<MovieComparison>>> GetMoviePriceComparisonsAsync()
     {
         var providers = new List<Providers> { Providers.Cinemaworld, Providers.Filmworld };
         var movieMap = new Dictionary<string, Dictionary<string, string>>();
