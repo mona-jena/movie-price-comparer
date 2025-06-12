@@ -22,8 +22,6 @@ namespace server.Infrastructure.Providers
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine(
-                        $"Failed request. Status: {response.StatusCode}, Reason: {response.ReasonPhrase}");
                     return new List<MovieSummary>(); 
                 }
 
@@ -35,7 +33,6 @@ namespace server.Infrastructure.Providers
             }
             catch (HttpRequestException ex)
             {
-                Console.WriteLine($"Error fetching movies for {provider}: {ex.Message}");
                 return new List<MovieSummary>();
             }
         }
@@ -52,7 +49,6 @@ namespace server.Infrastructure.Providers
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine($"Failed request. Status: {response.StatusCode}, Reason: {response.ReasonPhrase}");
                     return null;
                 }
 
@@ -71,7 +67,6 @@ namespace server.Infrastructure.Providers
             }
             catch (HttpRequestException ex)
             {
-                Console.WriteLine($"Error fetching movie details for {provider}: {ex.Message}");
                 return null;
             }
         }

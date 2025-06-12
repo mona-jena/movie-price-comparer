@@ -67,12 +67,7 @@ You can also view the Swagger doc on:
 - If neither provider responds, a user friendly message is shown.
 - The table UI shows title, poster, year, individual prices, and the cheapest provider.
 - Movie poster and year are optional fields and are included if available from detail API responses.
-- Included API to fetch Movie details even though it's not called for this problem. But it's a natural extension and good to have if we decide to add filtering logic in the future.
-
-**Alternatives considered**
-
-- **Backend service** - If expanding this service, I would have definetly added a backend service for clearer seperation of concerns and to add flexibility for authentication, logging and caching. But as this was a simple challenge, a simple proxy was sufficient and avoided an overengineered solution.
-- **Serverless function** - This is great for simple deployment with built in routing, but this challenge required it to only run locally and didn't need to be deployed.
+- Included API to fetch Movie details even though it's not called for this problem. But it's a natural extension and good to have if we decide to add filtering logic in the future. It also keeps the logic of getting movie details testable, ensuring provider logic is consistently exposed and ready for future extension.
 
 ### Data Model Design
 

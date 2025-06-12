@@ -16,9 +16,7 @@ export function useMovieData() {
         const response = await fetchMovies();
         setMoviePrices(response.data ?? []);
         setErrors(response.errors ?? []);
-        console.log("MoviePrices:", moviePrices);
       } catch (err) {
-        console.error("Movie fetch crashed:", err);
         setMoviePrices([]);
         setErrors([
           {
