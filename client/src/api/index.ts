@@ -5,7 +5,7 @@ const BASE_URL = import.meta.env.VITE_EXTERNAL_API_BASE;
 export async function fetchMovies(): Promise<ApiResponse<MovieComparison[]>> {
   try {
     const response = await fetch(`${BASE_URL}/movie`);
-    return await response.json(); // Full response: { data, errors }
+    return await response.json();
   } catch (err) {
     return {
       data: [],
@@ -29,7 +29,6 @@ export async function fetchMovieDetails(
     const response = await fetch(`${BASE_URL}/${provider}/movie/${id}`);
     return await response.json();
   } catch (err) {
-    console.error("Movie detail fetch failed:", err);
     return {
       data: null,
       errors: [
