@@ -36,18 +36,21 @@ VITE_EXTERNAL_API_BASE=http://localhost:5086/api
 3. Install dependencies from /client directory
 
 ```bash
+cd client
 npm install
 ```
 
 4. Start the client from /client directory
 
 ```bash
+cd client
 npm run dev
 ```
 
 5. Start the server from /server directory
 
 ```bash
+cd server
 dotnet run
 ```
 
@@ -66,6 +69,7 @@ You can also view the Swagger doc on:
 - The client is only responsible for making request to the api and displaying the results with a clean UX.
 - If neither provider responds, a user friendly message is shown.
 - The table UI shows title, poster, year, individual prices, and the cheapest provider.
+- API support partial failure and provides both data and structured error.
 - Movie poster and year are optional fields and are included if available from detail API responses.
 - Included API to fetch Movie details even though it's not called for this problem. But it's a natural extension and good to have if we decide to add filtering logic in the future. It also keeps the logic of getting movie details testable, ensuring provider logic is consistently exposed and ready for future extension.
 
@@ -74,7 +78,7 @@ You can also view the Swagger doc on:
 - _MovieComparison_: Info about each movie including pricing info per provider and the cheapest provider for that movie.
 - _MovieVersion_: Info about a movie including provider info.
 - _MovieListResponse_: List of movie info.
-- _MovieSummary_: Info with basic info about a movie returned from the Webjet /movie endpoint.
+- _MovieSummary_: Basic info about a movie returned from the Webjet /movie endpoint.
 - \_MovieDetails: Detailed info about a movie returned from the Webjet /movie/{ID} endpoint. This was done to keep both endpoint results separate, in case in the future
 - _WebjetMovieResponse_: Data as it comes straight from external API.
 
