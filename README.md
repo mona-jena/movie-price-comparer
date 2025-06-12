@@ -21,7 +21,7 @@ This web app compares prices for the same movies across multiple providers and h
 
 ## Running Locally
 
-1. Add a .env file inside the client folder with the below content inside. Feel free to update the port.
+1. Add a .env file inside the client folder with the below content inside.
 
 ```env
 VITE_EXTERNAL_API_BASE=http://localhost:5086/api
@@ -69,7 +69,7 @@ You can also view the Swagger doc on:
 - The client is only responsible for making request to the api and displaying the results with a clean UX.
 - If neither provider responds, a user friendly message is shown.
 - The table UI shows title, poster, year, individual prices, and the cheapest provider.
-- API support partial failure and provides both data and structured error.
+- API supports partial failure and provides both data and structured error.
 - Movie poster and year are optional fields and are included if available from detail API responses.
 - Included API to fetch Movie details even though it's not called for this problem. But it's a natural extension and good to have if we decide to add filtering logic in the future. It also keeps the logic of getting movie details testable, ensuring provider logic is consistently exposed and ready for future extension.
 
