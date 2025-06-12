@@ -8,84 +8,89 @@ This web app compares prices for the same movies across multiple providers and h
 - Shows **cheapest provider**
 - Handles **intermittent API failures**
 - Simple, responsive **table UI** with support for multiple providers
-- **Proxy server** used to bypass CORS and protect tokens
+- **API** to fetch list of movies with cheapest provider
 - Includes loading indicators and error messaging
 
 ## Assumptions
 
-- Movies are matched **by title** between providers.
-- A movie is only shown if it's available from **all working providers**.
+- Movies are matched by movie Id between providers.
+- A movie is only shown if it's available from atleast one working provider.
 - If one provider fails, the app continues with the available data.
-- Poster and year are optional and included only if available.
+- Poster and year are optional and included only if available. It's assumed that both the Webjet endpoints always return atleast Id and Title if they do return anything at all.
 - This solution should be able to run locally and doesn't need to be setup to be deployed at this point.
 
 ## Running Locally
 
-1. **Install dependencies**
+1. Add a .env file inside the client folder with the below content inside. Feel free to update the port.
+
+```env
+VITE_EXTERNAL_API_BASE=http://localhost:5086/api
+```
+
+2. Update the token in client/appsettings.json inside External Api > Webjet
+
+```
+"Token": "{ENTER-TOKEN}"
+```
+
+3. Install dependencies from /client directory
 
 ```bash
 npm install
 ```
 
-2. Add a .env file (at the root of this project) with the below content inside. Make sure to update the API token value
-
-```env
-API_TOKEN={your-api-token-here}
-EXTERNAL_API_BASE=http://webjetapitest.azurewebsites.net/api
-```
-
-3. Start the proxy server
-
-```bash
-npm run proxy
-```
-
-4. Start the frontend dev server
+4. Start the client from /client directory
 
 ```bash
 npm run dev
 ```
 
+5. Start the server from /server directory
+
+```bash
+dotnet run
+```
+
 This will launch the app on:
 
 - Frontend: http://localhost:5173
-- Proxy server: http://localhost:5001
+
+You can also view the Swagger doc on:
+
+- Swagger: http://localhost:5086/swagger/index.html
 
 ## Design
 
-- The proxy server (proxy-server.ts) attaches the API token and handles CORS.
-- The app avoids making requests in child components and keeps data logic inside the hook.
+- The server attaches the API token and handles CORS.
+- The server handles the logic to remove missing data and perform price comparison to find cheapest provider.
+- The client is only responsible for making request to the api and displaying the results with a clean UX.
 - If neither provider responds, a user friendly message is shown.
 - The table UI shows title, poster, year, individual prices, and the cheapest provider.
 - Movie poster and year are optional fields and are included if available from detail API responses.
-
-### Why a Proxy Server Was Needed
-
-The Webjet API does not support CORS (Cross-Origin Resource Sharing), which prevents frontend applications from making direct API requests in the browser due to security restrictions. I discovered this limitation by trying a directly make a call to the API from the React frontend, which resulted in a CORS policy error in the browser console.
-
-To solve this:
-
-- A lightweight proxy server was created using Express to make server side requests.
-- This server attaches the token, forwards the request to Webjet API, and sends back the response, bypassing the browser's CORS restriction.
-- This keeps the token hidden from the client, therefore safely keeps the token a secret.
-- Allows future enhancements like logging or caching without frontend changes.
+- Included API to fetch Movie details even though it's not called for this problem. But it's a natural extension and good to have if we decide to add filtering logic in the future.
 
 **Alternatives considered**
 
 - **Backend service** - If expanding this service, I would have definetly added a backend service for clearer seperation of concerns and to add flexibility for authentication, logging and caching. But as this was a simple challenge, a simple proxy was sufficient and avoided an overengineered solution.
 - **Serverless function** - This is great for simple deployment with built in routing, but this challenge required it to only run locally and didn't need to be deployed.
 
-### Types Summary
+### Data Model Design
 
-- _MovieFromProvider_: A movie version from a provider, including id, price, etc.
-- _MovieEntry_: A movie title and its versions across providers.
-- _MoviePrice_: Merged movie info used to render the table, including the cheapest provider and any metadata (like poster and year).
+- _MovieComparison_: Info about each movie including pricing info per provider and the cheapest provider for that movie.
+- _MovieVersion_: Info about a movie including provider info.
+- _MovieListResponse_: List of movie info.
+- _MovieSummary_: Info with basic info about a movie returned from the Webjet /movie endpoint.
+- \_MovieDetails: Detailed info about a movie returned from the Webjet /movie/{ID} endpoint. This was done to keep both endpoint results separate, in case in the future
+- _WebjetMovieResponse_: Data as it comes straight from external API.
+
+Provider-level models reflect the raw Webjet API shape, while domain models are shaped for our business logic. This separation avoids leaking external contracts into the rest of the app and enables easier mapping, testing, and evolution. I did consider adding another DTO layer that could be mapped at controller level. But since there wasn't much transformation logic, it didn't warrant a DTO model at this point. In the future if the way this data needs to be strucutred becomes more complex, then I would add it.
 
 ## Future Improvements
 
+- **Autogenerate Typescript client**: from backend using NSwag to ensure alignment between business model and API contracts
 - **Search & Filter**: Allow users to filter by genre, year, or search by title.
 - **Caching**: Cache provider responses to reduce API calls and improve speed.
 - **Pagination**: Handle longer movie lists using pagination or lazy loading.
 - **Unit Testing**: Add tests for hook, table rendering, and error handling logic.
-- **Error Reporting**: Log API failures for debugging.
+- **Error Reporting**: Log API failures for debugging
 - **Accessibility**: Improve focus states and screen reader support.
